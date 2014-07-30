@@ -1,7 +1,4 @@
-require 'spec_helper'
-
 describe IbanCalculator do
-
   describe '.url' do
     it 'defaults to ibanrechner.de' do
       expect(IbanCalculator.url).to eq('https://ssl.ibanrechner.de/soap/?wsdl')
