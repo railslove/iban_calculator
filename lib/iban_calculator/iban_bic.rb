@@ -52,9 +52,10 @@ module IbanCalculator
 
     def iban_payload(attributes)
       attributes = attributes.with_indifferent_access
+      attributes['account'] = attributes.delete('account_number')
       normalized_attributes = attributes.merge(italian_account_number(attributes))
-      payload = normalized_attributes.select { |k,_| [:country, :account_number, :bank_code].include?(k) }
-      default_payload.merge(payload)
+      payload = normalized_attributes.select { |k,_| %w(country account bank_code).include?(k) }
+      default_payload.merge(payload.symbolize_keys)
     end
 
     def log(message)

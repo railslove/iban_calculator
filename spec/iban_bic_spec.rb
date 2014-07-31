@@ -87,6 +87,14 @@ describe IbanCalculator::IbanBic do
     it 'adds default payload' do
       expect(subject.iban_payload({}).keys).to include(:user, :password, :legacy_mode)
     end
+
+    it 'overrides default data' do
+      expect(subject.iban_payload({ bank_code: '123' })).to match hash_including(bank_code: '123')
+    end
+
+    it 'replaces account_number with account' do
+      expect(subject.iban_payload({ account_number: '123' })).to match hash_including(account: '123')
+    end
   end
 
   describe '#calculate_iban' do
