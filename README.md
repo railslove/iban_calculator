@@ -18,7 +18,22 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+In order to use iban calculator, you need to create an account at [iban-bic.com](http://www.iban-bic.com/).
+
+In case you are using rails, configure your app like this:
+
+    # config/initializers/iban_calculator.rb
+    IbanCalculator.user = 'your_username',
+    IbanCalculator.password = 'your_password'
+    IbanCalculator.logger = Rails.logger
+
+Whenever you need to convert European legacy account data to new SEPA IBAN format:
+
+    # app/models/your_model.rb
+    IbanCalculator.calculate_iban country: 'DE', account_number: '123', bank_code: '456'
+
+Example data can be found at: http://www.iban-bic.com/sample_accounts.html
+
 
 ## Contributing
 
