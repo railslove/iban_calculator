@@ -16,8 +16,9 @@ module IbanCalculator
 
     # You should provide country, bank_code, and account_number. (cin, abi, and cab for Italian accounts)
     def calculate_iban(attributes)
-      response = client.call(:calculate_iban, message: iban_payload(attributes)).body[:calculate_iban_response][:return]
-      log "Failed iban lookup attributes=#{attributes} #{response}" unless response[:return_code].to_i == 0
+      payload = iban_payload(attributes)
+      response = client.call(:calculate_iban, message: payload).body[:calculate_iban_response][:return]
+      log "iban lookup attributes=#{attributes} payload=#{payload} response=#{response}"
       formatted_result(response)
     end
 
