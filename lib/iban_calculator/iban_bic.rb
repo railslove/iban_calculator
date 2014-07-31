@@ -30,7 +30,7 @@ module IbanCalculator
     end
 
     def default_payload
-      { user: user, password: password, bic: '', legacy_mode: 0, country: '', bank_code: '', account_number: '' }
+      { country: '', bank_code: '', account: '', user: user, password: password, bic: '', legacy_mode: 0 }
     end
 
     def formatted_result(data)
