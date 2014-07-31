@@ -26,16 +26,20 @@ describe IbanCalculator::IbanBic do
     context 'known single BIC payload' do
       let(:payload) { valid_payload[:bic_candidates] }
 
+      it 'returns an array' do
+        expect(subject.process_bic_candidates(payload)).to be_kind_of(Array)
+      end
+
       it 'returns its bank\'s bic' do
-        expect(subject.process_bic_candidates(payload)).to match hash_including(bic: 'BYLADEM1001')
+        expect(subject.process_bic_candidates(payload).first).to match hash_including(bic: 'BYLADEM1001')
       end
 
       it 'returns its bank\'s zip' do
-        expect(subject.process_bic_candidates(payload)).to match hash_including(zip: '10117')
+        expect(subject.process_bic_candidates(payload).first).to match hash_including(zip: '10117')
       end
 
       it 'returns its bank\'s city' do
-        expect(subject.process_bic_candidates(payload)).to match hash_including(city: 'Berlin')
+        expect(subject.process_bic_candidates(payload).first).to match hash_including(city: 'Berlin')
       end
     end
 
