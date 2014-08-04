@@ -58,10 +58,10 @@ module IbanCalculator
     end
 
     def italian_account_number(attributes = {})
-      return {} unless ['cin', 'abi', 'cab', 'account_number'].sort == attributes.keys.map(&:to_s).sort
-      left_length = ITALIAN_IBAN_LENGTH - PREFIX_AND_CHECKSUM_LENGTH - attributes['account_number'].length
+      return {} unless attributes['country'].to_s.upcase == 'IT'
+      left_length = ITALIAN_IBAN_LENGTH - PREFIX_AND_CHECKSUM_LENGTH - attributes['account'].length
       left_side = [attributes['cin'], attributes['abi'], attributes['cab']].join.ljust(left_length, '0')
-      { 'account_number' => left_side + attributes['account_number'] }
+      { 'account' => left_side + attributes['account'] }
     end
 
     def default_payload

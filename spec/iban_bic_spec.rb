@@ -10,11 +10,12 @@ describe IbanCalculator::IbanBic do
 
     it 'returns hash with correct account number if valid data is provided' do
       expect(subject.italian_account_number(
+        'country' => 'IT',
         'cab' => '03280',
         'abi' => '03002',
         'cin' => 'D',
-        'account_number' => '400162854',
-      )).to eq('account_number' => 'D0300203280000400162854')
+        'account' => '400162854',
+      )).to eq('account' => 'D0300203280000400162854')
     end
   end
 
@@ -77,15 +78,21 @@ describe IbanCalculator::IbanBic do
   end
 
   describe '#iban_payload' do
-    before { allow(subject).to receive(:italian_account_number).and_return({}) }
+    context 'italian data is provided' do
+      before { allow(subject).to receive(:italian_account_number).and_return({ 'account' => 'italy-123' }) }
 
-    it 'normalizes italian account data' do
-      subject.iban_payload({})
-      expect(subject).to have_received(:italian_account_number)
-    end
+      it 'normalizes italian account data' do
+        subject.iban_payload({})
+        expect(subject).to have_received(:italian_account_number)
+      end
 
-    it 'strips italian data' do
-      expect(subject.iban_payload({ 'cin' => '123' }).keys).to_not include('cin')
+      it 'merges italian data' do
+        expect(subject.iban_payload({ 'country' => 'IT' })).to match(hash_including(account: 'italy-123'))
+      end
+
+      it 'strips italian data' do
+        expect(subject.iban_payload({ 'cin' => '123' }).keys).to_not include('cin')
+      end
     end
 
     it 'adds default payload' do
