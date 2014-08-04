@@ -79,7 +79,7 @@ module IbanCalculator
     end
 
     def process_bic_candidates(candidates)
-      [candidates[:item].select { |key, _| [:bic, :zip, :city].include?(key) }]
+      [candidates[:item].select { |key, value| [:bic, :zip, :city].include?(key) && value.kind_of?(String) }]
     rescue
       log "Could not handle candidates=#{candidates}"
       fail ArgumentError, "Could not handle BIC response"

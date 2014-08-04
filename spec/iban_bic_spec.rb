@@ -44,6 +44,27 @@ describe IbanCalculator::IbanBic do
       it 'returns its bank\'s city' do
         expect(subject.process_bic_candidates(payload).first).to match hash_including(city: 'Berlin')
       end
+
+      context 'empty fields' do
+        let(:payload) { {:item=>{
+                            :bic=>"UNCRITMM",
+                            :zip=>{:"@xsi:type"=>"xsd:string"},
+                            :city=>{:"@xsi:type"=>"xsd:string"},
+                            :wwwcount=>"0",
+                            :sampleurl=>{:"@xsi:type"=>"xsd:string"},
+                            :"@xsi:type"=>"tns:BICStruct"
+                          },
+                          :"@xsi:type"=>"SOAP-ENC:Array",
+                          :"@soap_enc:array_type"=>"tns:BICStruct[1]"} }
+
+        it 'ignores empty zip' do
+          expect(subject.process_bic_candidates(payload).first.keys).to_not include(:zip)
+        end
+
+        it 'ignores empty city' do
+          expect(subject.process_bic_candidates(payload).first.keys).to_not include(:city)
+        end
+      end
     end
 
     context 'unknown payload' do
