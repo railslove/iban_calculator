@@ -1,6 +1,8 @@
 describe IbanCalculator::IbanBic do
   subject { described_class.new('user', 'pass', 'url', Logger.new(STDOUT) ) }
 
+  before { allow(subject.logger).to receive(:info) }
+
   describe '#italian_account_number' do
     it 'returns an empty hash if not all fields are provided' do
       expect(subject.italian_account_number).to eq({})
@@ -45,8 +47,6 @@ describe IbanCalculator::IbanBic do
 
     context 'unknown payload' do
       let(:payload) { { :items => [], :"@xsi:type" => 'SOAP-ENC:Array' } }
-
-      before { allow(subject.logger).to receive(:info) }
 
       it 'logs the payload' do
         subject.process_bic_candidates(payload) rescue
@@ -102,20 +102,62 @@ describe IbanCalculator::IbanBic do
   end
 
   describe '#calculate_iban' do
-    before do
-      response = double(body: { calculate_iban_response: { return: valid_payload } })
-      allow(subject.client).to receive(:call).and_return(response)
+    before { allow(subject.client).to receive(:call).and_return(response) }
+
+    context 'valid response' do
+      let(:response) { double(body: { calculate_iban_response: { return: valid_payload } }) }
+
+      it 'returns a formatted response' do
+        allow(subject).to receive(:formatted_result)
+        subject.calculate_iban({})
+        expect(subject).to have_received(:formatted_result)
+      end
+
+      it 'calls the client with the generated payload' do
+        subject.calculate_iban({})
+        expect(subject.client).to have_received(:call).with(:calculate_iban, message: anything)
+      end
     end
 
-    it 'calls the client with the generated payload' do
-      subject.calculate_iban({})
-      expect(subject.client).to have_received(:call).with(:calculate_iban, message: anything)
+    context 'probably valid response' do
+      let(:response) { double(body: { calculate_iban_response: { return: valid_payload.merge(return_code: '32') } }) }
+
+      it 'logs a message' do
+        subject.calculate_iban({}) rescue IbanCalculator::InvalidData
+        expect(subject.logger).to have_received(:info).with(/needs manual check/)
+      end
+
+      it 'returns a formatted response' do
+        allow(subject).to receive(:formatted_result)
+        subject.calculate_iban({})
+        expect(subject).to have_received(:formatted_result)
+      end
     end
 
-    it 'returns a formatted response' do
-      allow(subject).to receive(:formatted_result)
-      subject.calculate_iban({})
-      expect(subject).to have_received(:formatted_result)
+    context 'invalid response' do
+      let(:response) { double(body: { calculate_iban_response: { return: valid_payload.merge(return_code: '128') } }) }
+
+      it 'logs a message' do
+        subject.calculate_iban({}) rescue IbanCalculator::InvalidData
+        expect(subject.logger).to have_received(:info).with(/iban check invalid/)
+      end
+
+      it 'fails with invalid data exception' do
+        expect{ subject.calculate_iban({}) }.to raise_exception(IbanCalculator::InvalidData)
+      end
+    end
+
+    context 'server error response' do
+      let(:response) { double(body: { calculate_iban_response: { return: valid_payload.merge(return_code: '65536') } }) }
+
+      it 'logs a message' do
+        subject.calculate_iban({}) rescue IbanCalculator::ServiceError
+        expect(subject.logger).to have_received(:info).with(/iban check failed/)
+      end
+
+      it 'fails with service error exception' do
+        expect{ subject.calculate_iban({}) }.to raise_exception(IbanCalculator::ServiceError)
+      end
     end
   end
 

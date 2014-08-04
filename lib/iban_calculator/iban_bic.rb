@@ -1,9 +1,31 @@
 require 'savon'
 
+# Return codes and their meaning:
+#
+# 0 = all checks were successful
+#
+# 1 = sub account number has been added automatically
+# 2 = account number did not include a checksum
+# 4 = checksum has not been checked
+# 8 = bank code has not been checked
+#
+# 32 = A sub account number might be required, but could not be determined autoamtically
+#
+# 128 = checksum for account_number is invalid
+# 256 = bank_code could not be found is database
+# 512 = account_number has an invalid length
+# 1024 = bank_code has an invalid length
+# 4096 = data is missing (i.e. country code)
+# 8192= country is not yet supported
+#
 module IbanCalculator
   class IbanBic
     ITALIAN_IBAN_LENGTH = 27
     PREFIX_AND_CHECKSUM_LENGTH = 4
+
+    VALID_RESPONSE_CODE = 0..31
+    PROBABLY_VALID_RESPONSE_CODE = 32..127
+    SERVICE_ERROR_RESPONSE_CODE = 65536
 
     attr_accessor :user, :password, :url, :logger
 
@@ -19,7 +41,20 @@ module IbanCalculator
       payload = iban_payload(attributes)
       response = client.call(:calculate_iban, message: payload).body[:calculate_iban_response][:return]
       log "iban lookup attributes=#{attributes} payload=#{payload} response=#{response}"
-      formatted_result(response)
+
+      case return_code = response[:return_code].to_i
+      when VALID_RESPONSE_CODE
+        formatted_result(response)
+      when PROBABLY_VALID_RESPONSE_CODE
+        log "iban check needs manual check return_code=#{return_code}"
+        formatted_result(response)
+      when SERVICE_ERROR_RESPONSE_CODE
+        log "iban check failed return_code=#{return_code}"
+        fail ServiceError, 'Service could not handle the request'
+      else
+        log "iban check invalid return_code=#{return_code}"
+        fail InvalidData.new('Invalid input data', return_code)
+      end
     end
 
     def italian_account_number(attributes = {})

@@ -3,6 +3,7 @@ require 'active_support/configurable'
 require 'active_support/core_ext/hash'
 require 'logger'
 require 'iban_calculator/iban_bic'
+require 'iban_calculator/invalid_data'
 
 module IbanCalculator
   include ActiveSupport::Configurable
@@ -11,6 +12,8 @@ module IbanCalculator
   config_accessor(:user) { '' }
   config_accessor(:password) { '' }
   config_accessor(:logger) { Logger.new(STDOUT) }
+
+  ServiceError = Class.new(StandardError)
 
   def self.calculate_iban(attributes = {})
     client = IbanBic.new(config.user, config.password, config.url, config.logger)
