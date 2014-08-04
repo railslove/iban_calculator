@@ -12,7 +12,7 @@ module IbanCalculator
     attr_accessor :errors
 
     def initialize(msg, error_code)
-      errors = resolve_error_code(error_code)
+      self.errors = resolve_error_code(error_code)
       super(msg)
     end
 
