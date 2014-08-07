@@ -4,6 +4,7 @@ require 'active_support/core_ext/hash'
 require 'logger'
 require 'iban_calculator/iban_bic'
 require 'iban_calculator/invalid_data'
+require 'iban_calculator/bic_candidate'
 
 module IbanCalculator
   include ActiveSupport::Configurable
