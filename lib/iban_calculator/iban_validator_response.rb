@@ -26,8 +26,7 @@ module IbanCalculator
     end
 
     def bank
-      @bank ||= begin
-        {
+      @bank ||= begin Bank.new({
           code: string_or_default(raw_response[:bank_code]),
           name: string_or_default(raw_response[:bank]),
           country: string_or_default(raw_response[:country]),
@@ -35,7 +34,7 @@ module IbanCalculator
           url: string_or_default(raw_response[:bank_url]),
           branch: string_or_default(raw_response[:branch]),
           branch_code: string_or_default(raw_response[:branch_code]),
-        }
+        })
       end
     end
 
@@ -60,7 +59,7 @@ module IbanCalculator
     def as_json(opts = {})
       {
         account_number: account_number,
-        bank: bank,
+        bank: bank.as_json(opts),
         bic_candidates: bic_candidates.map { |c| c.as_json(opts) },
         updated_at: updated_at,
         checks: checks,

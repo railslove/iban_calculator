@@ -27,35 +27,35 @@ RSpec.describe IbanCalculator::IbanValidatorResponse do
 
   describe '#bank' do
     it 'returns a bank hash' do
-      expect(valid.bank).to be_instance_of(Hash)
+      expect(valid.bank).to be_instance_of(IbanCalculator::Bank)
     end
 
     it 'returns bank name' do
-      expect(valid.bank[:name]).to eq('Bank of Ireland')
+      expect(valid.bank.name).to eq('Bank of Ireland')
     end
 
     it 'returns bank address' do
-      expect(valid.bank[:address]).to eq('Dublin 2')
+      expect(valid.bank.address).to eq('Dublin 2')
     end
 
     it 'returns bank code' do
-      expect(valid.bank[:code]).to eq('90-00-17')
+      expect(valid.bank.code).to eq('90-00-17')
     end
 
     it 'returns bank country' do
-      expect(valid.bank[:country]).to eq('IE')
+      expect(valid.bank.country).to eq('IE')
     end
 
     it 'returns bank url' do
-      expect(valid.bank[:url]).to eq('')
+      expect(valid.bank.url).to eq('')
     end
 
     it 'returns bank branch' do
-      expect(valid.bank[:branch]).to eq('')
+      expect(valid.bank.branch).to eq('')
     end
 
     it 'returns bank branch_code' do
-      expect(valid.bank[:branch_code]).to eq('')
+      expect(valid.bank.branch_code).to eq('')
     end
   end
 

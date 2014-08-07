@@ -2,10 +2,12 @@ require 'iban_calculator/version'
 require 'active_support/configurable'
 require 'active_support/core_ext/hash'
 require 'logger'
-require 'iban_calculator/iban_bic'
-require 'iban_calculator/invalid_data'
+
+require 'iban_calculator/bank'
 require 'iban_calculator/bic_candidate'
+require 'iban_calculator/iban_bic'
 require 'iban_calculator/iban_validator_response'
+require 'iban_calculator/invalid_data'
 
 module IbanCalculator
   # Extensions
