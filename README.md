@@ -34,6 +34,10 @@ Whenever you need to convert European legacy account data to new SEPA IBAN forma
 
 Example data can be found at: http://www.iban-bic.com/sample_accounts.html
 
+You can also validate a given IBAN and fetch additional data about it:
+
+    IbanCalculator.validate_iban 'AL90208110080000001039531801'
+
 
 ## Contributing
 
