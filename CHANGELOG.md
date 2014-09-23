@@ -1,3 +1,8 @@
+0.0.3
+-----
+
+* Raise an exception when an unexpected response is returned (i.e. invalid user and password)
+
 0.0.2
 -----
 
