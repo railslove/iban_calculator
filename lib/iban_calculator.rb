@@ -28,8 +28,15 @@ module IbanCalculator
   end
 
   def self.validate_iban(iban)
-    client = Savon.client(wsdl: config.url, logger: config.logger)
-    response = client.call(:validate_iban, message: { iban: iban, user: config.user, password: config.password })
+    response = execute(:validate_iban, iban: iban, user: config.user, password: config.password)
     IbanValidatorResponse.new(response.body[:validate_iban_response][:return])
+  end
+
+  def self.execute(method, options = {})
+    client = Savon.client(wsdl: config.url, logger: config.logger)
+    client.call(method, message: options).tap do |response|
+      status = response.body[:"#{method}_response"][:return][:result]
+      fail(ServiceError, status) unless status == 'passed'
+    end
   end
 end
