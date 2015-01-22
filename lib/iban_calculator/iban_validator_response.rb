@@ -39,7 +39,7 @@ module IbanCalculator
     end
 
     def account_number
-      @account_number ||= raw_response[:account_number]
+      @account_number ||= string_or_default(raw_response[:account_number], nil)
     end
 
     def checks
@@ -49,7 +49,7 @@ module IbanCalculator
     end
 
     def updated_at
-      @data_created_at ||= Date.parse(raw_response[:data_age])
+      @data_created_at ||= Date.parse(raw_response[:data_age]) if string_or_default(raw_response[:data_age], nil)
     end
 
     def errors
@@ -58,6 +58,8 @@ module IbanCalculator
 
     def as_json(opts = {})
       {
+        valid: valid?,
+        errors: errors,
         account_number: account_number,
         bank: bank.as_json(opts),
         bic_candidates: bic_candidates.map { |c| c.as_json(opts) },
