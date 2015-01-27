@@ -65,7 +65,7 @@ module IbanCalculator
         bic_candidates: bic_candidates.map { |c| c.as_json(opts) },
         updated_at: updated_at,
         checks: checks,
-      }
+      }.deep_stringify_keys!
     end
 
     private

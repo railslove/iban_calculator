@@ -25,7 +25,7 @@ module IbanCalculator
         city: city,
         sample_url: sample_url,
         www_count: www_count,
-      }
+      }.deep_stringify_keys!
     end
 
     private
