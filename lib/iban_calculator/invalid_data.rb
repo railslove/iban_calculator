@@ -5,6 +5,7 @@ module IbanCalculator
       256  => [:bank_code,      [:not_found]],
       512  => [:account_number, [:invalid_length]],
       1024 => [:bank_code,      [:invalid_length]],
+      2048 => [:iban,           [:checksum_failed]],
       4096 => [:base,           [:data_missing]],
       8192 => [:country,        [:not_supported]],
     }
