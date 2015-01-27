@@ -1,3 +1,8 @@
+0.1.0
+-----
+
+* Allow invalid IBANs to bubble though and not to fail spectacular
+
 0.0.3
 -----
 
