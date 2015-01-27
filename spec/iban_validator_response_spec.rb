@@ -93,6 +93,10 @@ RSpec.describe IbanCalculator::IbanValidatorResponse do
     it 'returns a proper date object' do
       expect(valid.updated_at).to eq(Date.new(2014, 07, 06))
     end
+
+    it 'is nil for invalid response' do
+      expect(invalid.updated_at).to eq(nil)
+    end
   end
 
   describe '#errors' do
@@ -112,11 +116,25 @@ RSpec.describe IbanCalculator::IbanValidatorResponse do
   describe '#as_json' do
     it 'returns an hash with all attributes' do
       expect(valid.as_json).to eq({
+        valid: true,
+        errors: {},
         account_number: '10027952',
         bank: { code: '90-00-17', name: 'Bank of Ireland', country: 'IE', address: 'Dublin 2', url: '', branch: '', branch_code: '' },
         bic_candidates: [{ bic: 'BOFIIE2D', zip: '', city: '', sample_url: '', www_count: 0 }],
         checks: { length: 'passed', account_number: 'passed', bank_code: 'passed', iban_checksum: 'passed' },
         updated_at: Date.new(2014, 7, 6)
+      })
+    end
+
+    it 'also returns errors for invalid response' do
+      expect(invalid.as_json).to eq({
+        valid: false,
+        errors: {:account_number=>[:invalid_length]},
+        account_number: nil,
+        bank: { code: '', name: '', country: 'IE', address: '', url: '', branch: '', branch_code: '' },
+        bic_candidates: [],
+        checks: { length: 'failed', account_number: 'not_checked', bank_code: 'not_checked', iban_checksum: 'not_checked' },
+        updated_at: nil
       })
     end
   end

@@ -36,7 +36,7 @@ module IbanCalculator
     client = Savon.client(wsdl: config.url, logger: config.logger)
     client.call(method, message: options).tap do |response|
       status = response.body[:"#{method}_response"][:return][:result]
-      fail(ServiceError, status) unless status == 'passed'
+      fail(ServiceError, status) unless response.body[:"#{method}_response"][:return_code]
     end
   end
 end
