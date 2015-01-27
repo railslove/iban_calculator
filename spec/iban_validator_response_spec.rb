@@ -119,8 +119,9 @@ RSpec.describe IbanCalculator::IbanValidatorResponse do
         "valid" => true,
         "errors" => {},
         "account_number" => '10027952',
-        "bank" => { "code" => '90-00-17', "name" => 'Bank of Ireland', "country" => 'IE', "address" => 'Dublin 2', "url" => '', "branch" => '', "branch_code" => '' },
-        "bic_candidates" => [{ "bic" => 'BOFIIE2D', "zip" => '', "city" => '', "sample_url" => '', "www_count" => 0 }],
+        "bank" => "Bank of Ireland",
+        "bank_code" => '90-00-17',
+        "bics" => [{ "bic" => 'BOFIIE2D', "zip" => '', "city" => '', "sample_url" => '', "www_count" => 0 }],
         "checks" => { "length" => 'passed', "account_number" => 'passed', "bank_code" => 'passed', "iban_checksum" => 'passed' },
         "updated_at" => Date.new(2014, 7, 6)
       })
@@ -131,8 +132,9 @@ RSpec.describe IbanCalculator::IbanValidatorResponse do
         "valid" => false,
         "errors" => { "account_number" => [:invalid_length]},
         "account_number" => nil,
-        "bank" => { "code" => '', "name" => '', "country" => 'IE', "address" => '', "url" => '', "branch" => '', "branch_code" => '' },
-        "bic_candidates" => [],
+        "bank" => '',
+        "bank_code" => '',
+        "bics" => [],
         "checks" => { "length" => 'failed', "account_number" => 'not_checked', "bank_code" => 'not_checked', "iban_checksum" => 'not_checked' },
         "updated_at" => nil
       })
