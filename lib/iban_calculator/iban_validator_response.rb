@@ -50,6 +50,8 @@ module IbanCalculator
 
     def updated_at
       @data_created_at ||= Date.parse(raw_response[:data_age]) if string_or_default(raw_response[:data_age], nil)
+    rescue ArgumentError
+      nil
     end
 
     def errors
