@@ -1,3 +1,12 @@
+0.1.1
+-----
+
+* added missing failure code for iban checksum
+* fixed error condition, so not every request is concidered an error ;)
+* `#as_json` will have stringified keys
+* `#valdiate_iban` and `#calculate_iban` should respond with mostly the same format
+* rescue from `ArgumentError` happening when the date is present but not valid
+
 0.1.0
 -----
 
