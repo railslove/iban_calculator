@@ -23,8 +23,13 @@ end
 class << IbanCalculator
   alias_method :old_config_accessor, :config_accessor
 
-  def config_accessor(key, &block)
-    old_config_accessor(key)
-    send("#{key}=", block.call)
+  def config_accessor(*names)
+    old_config_accessor(*names)
+
+    return unless block_given?
+
+    names.each do |name|
+      send("#{name}=", yield)
+    end
   end
 end
