@@ -1,6 +1,5 @@
 # these are methods implemented in active_support 4 which
 # are required to run this gem with active_support 3
-require 'active_support/configurable'
 
 module IbanCalculator
   include ActiveSupport::Configurable
