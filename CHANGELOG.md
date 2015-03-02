@@ -1,3 +1,7 @@
+0.2.0
+-----
+* [lower active_support dependency](https://github.com/railslove/iban_calculator/pull/7)
+
 0.1.1
 -----
 
