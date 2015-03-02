@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/railslove/iban_calculator.svg?branch=master)](https://travis-ci.org/railslove/iban_calculator)
+
 # IbanCalculator
 
 A wrapper for ibanrechner.de API. It allows converting bank account data from legacy syntax to new SEPA IBAN/BIC.
