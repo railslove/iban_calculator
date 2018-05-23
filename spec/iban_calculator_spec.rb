@@ -49,6 +49,16 @@ describe IbanCalculator do
     end
   end
 
+  describe '.calculate_iban' do
+    let(:error_message) { 'Service could not handle the request' }
+    let(:response) { { calculate_iban_response: { return: { return_code: '65536' } } } }
+
+    before { allow_any_instance_of(Savon::Client).to receive(:call) { double(body: response) } }
+
+    it 'raises a generic exception' do
+      expect { IbanCalculator.calculate_iban({}) }.to raise_error(IbanCalculator::ServiceError, error_message)
+    end
+  end
 
   describe '.execute' do
     context 'invalid username and password' do

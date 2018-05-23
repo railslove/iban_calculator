@@ -27,13 +27,14 @@ module IbanCalculator
     PROBABLY_VALID_RESPONSE_CODE = 32..127
     SERVICE_ERROR_RESPONSE_CODE = 65536
 
-    attr_accessor :user, :password, :url, :logger
+    attr_accessor :user, :password, :url, :logger, :config
 
-    def initialize(user, password, url, logger)
-      self.user = user
-      self.password = password
-      self.url = url
-      self.logger = logger
+    def initialize(config)
+      self.user = config.user
+      self.password = config.password
+      self.url = config.url
+      self.logger = config.logger
+      self.config = config
     end
 
     # You should provide country, bank_code, and account_number. (cin, abi, and cab for Italian accounts)
@@ -98,7 +99,7 @@ module IbanCalculator
     end
 
     def client
-      @client ||= Savon.client(wsdl: url)
+      @client ||= Savon.client(wsdl: url, read_timeout: config.read_timeout, open_timeout: config.open_timeout)
     end
   end
 end

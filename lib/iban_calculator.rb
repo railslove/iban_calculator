@@ -15,16 +15,18 @@ module IbanCalculator
   include ActiveSupport::Configurable
 
   # Configuration
-  config_accessor(:url) { 'https://ssl.ibanrechner.de/soap/?wsdl' }
-  config_accessor(:user) { '' }
-  config_accessor(:password) { '' }
-  config_accessor(:logger) { Logger.new(STDOUT) }
+  config_accessor(:url)          { 'https://ssl.ibanrechner.de/soap/?wsdl' }
+  config_accessor(:user)         { '' }
+  config_accessor(:password)     { '' }
+  config_accessor(:logger)       { Logger.new(STDOUT) }
+  config_accessor(:read_timeout) { 5 }
+  config_accessor(:open_timeout) { 5 }
 
   # Errors
   ServiceError = Class.new(StandardError)
 
   def self.calculate_iban(attributes = {})
-    client = IbanBic.new(config.user, config.password, config.url, config.logger)
+    client = IbanBic.new(config)
     client.calculate_iban(attributes)
   end
 
@@ -34,7 +36,7 @@ module IbanCalculator
   end
 
   def self.execute(method, options = {})
-    client = Savon.client(wsdl: config.url, logger: config.logger)
+    client = Savon.client(wsdl: config.url, logger: config.logger, read_timeout: config.read_timeout, open_timeout: config.open_timeout)
     client.call(method, message: options).tap do |response|
       status = response.body[:"#{method}_response"][:return][:result]
       fail(ServiceError, status) unless response.body[:"#{method}_response"][:return][:return_code]

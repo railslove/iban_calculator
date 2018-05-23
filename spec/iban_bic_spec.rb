@@ -1,5 +1,18 @@
+require 'ostruct'
+
 describe IbanCalculator::IbanBic do
-  subject { described_class.new('user', 'pass', 'url', Logger.new(STDOUT) ) }
+  let(:config) {
+    OpenStruct.new(
+      user: 'user',
+      password: 'pass',
+      url: 'url',
+      logger: Logger.new(STDOUT),
+      read_timeout: 5,
+      open_timeout: 5
+    )
+  }
+
+  subject { described_class.new(config) }
 
   before { allow(subject.logger).to receive(:info) }
 
