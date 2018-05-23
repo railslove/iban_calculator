@@ -1,4 +1,5 @@
 require 'iban_calculator/version'
+require 'active_support/version'
 require 'active_support/configurable'
 require 'active_support/core_ext/hash'
 require 'logger'
